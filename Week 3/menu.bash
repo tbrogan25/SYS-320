@@ -83,6 +83,7 @@ function security_menu() {
 	echo "[C]heck for users with UID: 0"
 	echo "[S]how last 10 logged in users"
 	echo "[V]iew currently logged in users"
+	echo "[B]lock List Menu"
 	echo "[E]xit"
 	read -p "Please select an option: " choice
 
@@ -96,6 +97,8 @@ function security_menu() {
 		;;
 		V|v) w | tail -1 | less
 		;;
+		B|b) block_list_menu
+		;;
 		E|e) exit 0
 		;;
 
@@ -108,7 +111,43 @@ function security_menu() {
 	esac
 
 security_menu
-} 
+}
+
+function block_list_menu() {
+	clear
+	echo "[L]inux Blocklist Generator"
+	echo "[D]omain URL Blocklist Generator"
+	echo "[W]indows Blocklist Generator"
+	echo "[C]isco Blocklist Generator"
+	echo "[M]ac Blocklist Generator"
+	echo "[E]xit"
+	read -p "Please select an option: " choice
+
+	case "$choice" in
+
+		L|l) bash /home/timothy/git/SYS-320/'Week 4'/parse-threat.bash -i
+		;;
+		D|d) bash /home/timothy/git/SYS-320/'Week 4'/parse-threat.bash -d
+		;;
+		W|w) bash /home/timothy/git/SYS-320/'Week 4'/parse-threat.bash -w
+		;;
+		C|c) bash /home/timothy/git/SYS-320/'Week 4'/parse-threat.bash -c
+		;;
+		M|m) bash /home/timothy/git/SYS-320/'Week 4'/parse-threat.bash -m
+		;;
+		E|e) exit 0
+		;;
+
+		*)
+
+			invalid_opt
+
+		;;
+
+	esac
+
+block_list_menu
+}
 
 function vpn_menu() {
 	clear
