@@ -1,0 +1,15 @@
+1. What has been your experience learning bash?
+
+I have found learning Bash to be enjoyable and useful. I think Bash scripting is easy for me to grasp which has consequently shown me how useful it can be. For example, parsing log files and creating firewall rules is a real-world task that I feel confident in doing.
+
+2. What would have made the experience with learning it better, if there were problems with it, my instructions, or the assignments?
+
+I initially struggled with the assignment instructions as they oftentimes were not mentioned in the provided videos. Sometimes, the assignment instructions were already completed in one of the weeks' videos. This inconsistency initially confused me but I got used to it.
+
+3. Approximately how much time did you spend working on assignments?
+
+I spent approximately two to three hours on each assignment.
+
+4. Are you able to see how the programs used in this class or learning bash would be helpful for your career?
+
+Absolutely!
