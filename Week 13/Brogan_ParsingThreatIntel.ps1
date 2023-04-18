@@ -52,21 +52,13 @@ switch ( $rule_type ) {
     }
     'w' {
         # Create Windows firewall rules
-        $fw = New-Object -ComObject hnetcfg.fwpolicy2
-        $profile = $fw.GetProfileByType(1)
-        $rules = ""
-        foreach ($ip in Get-Content ".\ips-bad.tmp") {
-            $rule = New-Object -ComObject HNetCfg.FWRule
-            $rule.Name = "Block $ip"
-            $rule.Description = "Block incoming traffic from $ip"
-            $rule.Protocol = 6 # TCP
-            $rule.LocalPorts = "Any"
-            $rule.RemoteAddresses = $ip
-            $rule.Direction = 1 # Inbound
-            $rule.Action = 0 # Block
-            $rule.Enabled = $true
-            $rules += $rule | Out-String
+        $firewall_rules = (Get-Content -Path ".\ips-bad.tmp") | ForEach-Object { 
+            $subnet = '255.255.255.255'
+            $ip = $_
+            New-Object -TypeName "System.Management.Automation.PSObject" -Property @{
+                'Rule' = "New-NetFirewallRule -RemoteAddress $ip/$subnet -DisplayName 'Block Bad IP: $ip/$subnet' -Direction inbound -Profile Any -Action Block"
+            }
         }
-        $rules | Out-File -FilePath "Windows-Firewall-Rules.txt"
+        $firewall_rules | Select-Object -ExpandProperty Rule | Out-File -FilePath "C:\Windows-firewall-rules.txt"
 }
 
