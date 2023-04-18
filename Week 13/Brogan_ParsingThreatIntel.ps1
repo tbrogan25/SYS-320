@@ -44,16 +44,35 @@ $rule_type = Read-Host "Would you like to create IPTables or Windows FW rules wi
 
 switch ( $rule_type ) {
     'i' { 
-    
+        # Create IPTables rules
         (Get-Content -Path ".\ips-bad.tmp") | % `
         { $_ -replace "^","iptables -A INPUT -s " -replace "$", " -j DROP" } | `
         Out-File -FilePath "iptables.bash"
 
     }
     'w' {
-    
+        # Create Windows firewall rules
+        $ips = Get-Content -Path ".\ips-bad.tmp"
+        $fw = New-Object -ComObject hnetcfg.fwpolicy2
 
+        # Loop through each IP address and create a new firewall rule for each one
+        foreach ($ip in $ips) {
+            $rule = New-Object -ComObject HNetCfg.FWRule
+            $rule.Name = "Block $ip"
+            $rule.Description = "Block incoming traffic from $ip"
+            $rule.Direction = 1 # Inbound
+            $rule.Protocol = 256 # Any protocol
+            $rule.LocalPorts = "Any"
+            $rule.RemoteAddresses = $ip
+            $rule.Enabled = $true
+            $rule.Grouping = "@firewallapi.dll,-23255"
+            $rule.Profiles = 7 # All profiles
+            $rule.Action = 0 # Block
+            $fw.Rules.Add($rule)
+        }
 
+        # Save the rules to a file
+        $fw.Export("PolicyRules.xml")
     } 
 }
 
