@@ -52,27 +52,21 @@ switch ( $rule_type ) {
     }
     'w' {
         # Create Windows firewall rules
-        $ips = Get-Content -Path ".\ips-bad.tmp"
         $fw = New-Object -ComObject hnetcfg.fwpolicy2
-
-        # Loop through each IP address and create a new firewall rule for each one
-        foreach ($ip in $ips) {
+        $profile = $fw.GetProfileByType(1)
+        $rules = ""
+        foreach ($ip in Get-Content ".\ips-bad.tmp") {
             $rule = New-Object -ComObject HNetCfg.FWRule
             $rule.Name = "Block $ip"
             $rule.Description = "Block incoming traffic from $ip"
-            $rule.Direction = 1 # Inbound
-            $rule.Protocol = 256 # Any protocol
+            $rule.Protocol = 6 # TCP
             $rule.LocalPorts = "Any"
             $rule.RemoteAddresses = $ip
-            $rule.Enabled = $true
-            $rule.Grouping = "@firewallapi.dll,-23255"
-            $rule.Profiles = 7 # All profiles
+            $rule.Direction = 1 # Inbound
             $rule.Action = 0 # Block
-            $fw.Rules.Add($rule)
+            $rule.Enabled = $true
+            $rules += $rule | Out-String
         }
-
-        # Save the rules to a file
-        $fw.Export("PolicyRules.xml")
-    } 
+        $rules | Out-File -FilePath "Windows-Firewall-Rules.txt"
 }
 
