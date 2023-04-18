@@ -1,4 +1,4 @@
-﻿# Storyline:
+﻿# Storyline: Parse lists of malicious IP addresses and create either IPTables or Windows firewall rulesets
 
 # Array of websites containing threat intell
 $drop_urls = @('https://rules.emergingthreats.net/blockrules/emerging-botcc.rules', 'https://rules.emergingthreats.net/blockrules/compromised-ips.txt')
@@ -29,7 +29,7 @@ foreach ($u in $drop_urls) {
 # Array containing the filename
 $input_paths = @('.\compromised-ips.txt', '.\emerging-botcc.rules')
 
-# Extract the IP addresses
+# Extract the IP addresses using regex
 $regex_drop = '\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b'
 
 # Append the IP addresses to the temporary IP list
@@ -60,5 +60,6 @@ switch ( $rule_type ) {
             }
         }
         $firewall_rules | Select-Object -ExpandProperty Rule | Out-File -FilePath "C:\Windows-firewall-rules.txt"
+    }
 }
 
