@@ -47,7 +47,7 @@ switch ( $rule_type ) {
         # Create IPTables rules
         (Get-Content -Path ".\ips-bad.tmp") | % `
         { $_ -replace "^","iptables -A INPUT -s " -replace "$", " -j DROP" } | `
-        Out-File -FilePath "iptables.bash"
+        Out-File -FilePath "C:\iptables.bash"
 
     }
     'w' {
